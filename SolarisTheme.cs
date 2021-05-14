@@ -29,6 +29,7 @@ namespace Solaris
         static readonly private Color mainTextColor = Color.FromArgb(223, 223, 223);
         static readonly private Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         static readonly private Color orbitColor = Color.FromArgb(64, 64, 64);
+        static readonly private Color planetColor = Color.FromArgb(128, 128, 128);
 
         override protected void Loaded(Harmony harmony)
         {
@@ -44,6 +45,7 @@ namespace Solaris
             ThemeCreator.ThemeCreator.AddFontChange(typeof(Button), buttonFont);
 
             ThemeCreator.ThemeCreator.SetCometTailColor(orbitColor);
+            ThemeCreator.ThemeCreator.SetPlanetColor(planetColor);
 
             ThemeCreator.ThemeCreator.DrawEllipsePrefixAction((graphics, pen) =>
             {
