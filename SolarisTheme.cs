@@ -28,8 +28,7 @@ namespace Solaris
         static readonly private Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
         static readonly private Color mainTextColor = Color.FromArgb(223, 223, 223);
         static readonly private Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
-        static readonly private Color cometTailColor = Color.FromArgb(64, 64, 64);
-        static readonly private Color movementTailColor = Color.FromArgb(0, 85, 86);
+        static readonly private Color orbitColor = Color.FromArgb(64, 64, 64);
 
         override protected void Loaded(Harmony harmony)
         {
@@ -44,9 +43,17 @@ namespace Solaris
             ThemeCreator.ThemeCreator.AddFontChange(mainFont);
             ThemeCreator.ThemeCreator.AddFontChange(typeof(Button), buttonFont);
 
+            ThemeCreator.ThemeCreator.SetCometTailColor(orbitColor);
+
             ThemeCreator.ThemeCreator.DrawEllipsePrefixAction((graphics, pen) =>
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                // LimeGreen circles is used to mark orbits and colonies
+                if (pen.Color == Color.LimeGreen)
+                {
+                    pen.Color = orbitColor;
+                }
             });
 
             ThemeCreator.ThemeCreator.FillEllipsePrefixAction((graphics, brush) =>
@@ -54,14 +61,20 @@ namespace Solaris
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
             });
 
-            ThemeCreator.ThemeCreator.SetCometTailColor(cometTailColor);
             ThemeCreator.ThemeCreator.DrawLinePrefixAction((graphics, pen) =>
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-                if (pen.Color == Color.FromArgb(0, 206, 209))
+                // Movement tails
+                // TODO: Hostiles
+                if (pen.Color == Color.FromArgb(0, 206, 209) || pen.Color == Color.FromArgb(255, 255, 192))
                 {
-                    pen.Color = movementTailColor;
+                    pen.Color = ControlPaint.Dark(pen.Color, 0.5f);
+                }
+                // Comet path (distance ruler also uses LimeGreen but has pen.Width > 1)
+                else if (pen.Color == Color.LimeGreen && pen.Width == 1)
+                {
+                    pen.Color = orbitColor;
                 }
             });
 
