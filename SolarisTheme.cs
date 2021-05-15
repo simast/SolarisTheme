@@ -17,6 +17,8 @@ namespace SolarisTheme
         public override string Description => "Solaris Theme";
         public override IEnumerable<string> Dependencies => new[] { "ThemeCreator", "Lib" };
 
+        private static Lib.Lib lib;
+
         // Fonts
         private static readonly FontFamily fontFamily = new FontFamily("Tahoma");
         private static readonly Font mainFont = new Font(fontFamily, 8.25f, FontStyle.Regular);
@@ -31,6 +33,8 @@ namespace SolarisTheme
 
         protected override void Loaded(Harmony harmony)
         {
+            lib = GetDependency<Lib.Lib>("Lib");
+
             ThemeCreator.ThemeCreator.AddColorChange(Color.FromArgb(0, 0, 64), mainBackgroundColor);
             ThemeCreator.ThemeCreator.AddColorChange(Color.FromArgb(255, 255, 192), mainTextColor);
 
@@ -52,9 +56,7 @@ namespace SolarisTheme
 
                 // LimeGreen circles are used to mark orbits and colonies
                 if (pen.Color == Color.LimeGreen)
-                {
                     pen.Color = orbitColor;
-                }
             });
 
             ThemeCreator.ThemeCreator.FillEllipsePrefixAction((graphics, brush) =>
@@ -69,14 +71,10 @@ namespace SolarisTheme
                 // Movement tails
                 // TODO: Hostiles
                 if (pen.Color == Color.FromArgb(0, 206, 209) || pen.Color == Color.FromArgb(255, 255, 192))
-                {
                     pen.Color = ControlPaint.Dark(pen.Color, 0.5f);
-                }
                 // Comet path (distance ruler also uses LimeGreen but has pen.Width > 1)
                 else if (pen.Color == Color.LimeGreen && pen.Width == 1)
-                {
                     pen.Color = orbitColor;
-                }
             });
 
             ThemeCreator.ThemeCreator.DrawStringPrefixAction((graphics, s, font, brush) =>
@@ -101,7 +99,7 @@ namespace SolarisTheme
             ChangeButtonImage(AuroraButton.Right, Resources.Icon_Right, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarColony, Resources.Icon_Colony, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarIndustry, Resources.Icon_Industry, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarMining, Resources.Icon_Mining, Color.FromArgb(243, 174, 129));
+            ChangeButtonImage(AuroraButton.ToolbarMining, Resources.Icon_Mining, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarResearch, Resources.Icon_Research, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarWealth, Resources.Icon_Wealth, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarClass, Resources.Icon_Class, mainTextColor);
@@ -134,12 +132,8 @@ namespace SolarisTheme
             var formConstructorPostfix = new HarmonyMethod(GetType().GetMethod("FormConstructorPostfix", AccessTools.all));
 
             foreach (var form in AuroraAssembly.GetTypes().Where(t => typeof(Form).IsAssignableFrom(t)))
-            {
                 foreach (var ctor in form.GetConstructors())
-                {
                     harmony.Patch(ctor, postfix: formConstructorPostfix);
-                }
-            }
         }
 
         private static void FormConstructorPostfix(Form __instance)
@@ -155,9 +149,7 @@ namespace SolarisTheme
             ApplyChanges(control);
 
             foreach (Control ctrl in control.Controls)
-            {
                 IterateControls(ctrl);
-            }
         }
 
         private static void ApplyChanges(Control control)
@@ -170,9 +162,7 @@ namespace SolarisTheme
 
                 // Patch tactical map tabs to fit on two lines after custom font changes
                 if (tabControl.Name == "tabSidebar")
-                {
                     tabControl.Padding = new Point(5, 3);
-                }
             }
             else if (control.GetType() == typeof(Button))
             {
@@ -182,12 +172,74 @@ namespace SolarisTheme
                 button.FlatStyle = FlatStyle.Flat;
                 button.FlatAppearance.BorderColor = mainBackgroundColor;
                 button.FlatAppearance.BorderSize = 2;
+
+                if (button.Name != lib.KnowledgeBase.GetButtonName(AuroraButton.SubPulse)
+                    && button.Name != lib.KnowledgeBase.GetButtonName(AuroraButton.Increment))
+                {
+                    button.AutoSize = true;
+                }
             }
             else if (control.GetType() == typeof(ComboBox))
             {
                 var comboBox = control as ComboBox;
 
                 comboBox.FlatStyle = FlatStyle.Flat;
+                comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
+            else if (control.GetType() == typeof(TreeView))
+            {
+                var treeView = control as TreeView;
+
+                treeView.BorderStyle = BorderStyle.None;
+            }
+            else if (control.GetType() == typeof(ListView))
+            {
+                var listView = control as ListView;
+
+                if (listView.BorderStyle == BorderStyle.Fixed3D)
+                    listView.BorderStyle = BorderStyle.FixedSingle;
+
+                if (listView.Name == "lstvSB")
+                {
+                    listView.OwnerDraw = false;
+
+                    listView.Invalidated += (Object sender, InvalidateEventArgs e) =>
+                    {
+                        foreach (ListViewItem item in ((ListView)sender).Items)
+                        {
+                            if (item.ForeColor == Color.FromArgb(255, 255, 192))
+                                item.ForeColor = mainTextColor;
+
+                            foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
+                            {
+                                if (subItem.ForeColor == Color.FromArgb(255, 255, 192))
+                                    subItem.ForeColor = mainTextColor;
+                            }
+                        }
+                    };
+                }
+            }
+            else if (control.GetType() == typeof(ListBox))
+            {
+                var listBox = control as ListBox;
+
+                if (listBox.BorderStyle == BorderStyle.Fixed3D)
+                    listBox.BorderStyle = BorderStyle.FixedSingle;
+            }
+            else if (control.GetType() == typeof(FlowLayoutPanel))
+            {
+                var flowLayoutPanel = control as FlowLayoutPanel;
+
+                if (flowLayoutPanel.BorderStyle == BorderStyle.Fixed3D)
+                    flowLayoutPanel.BorderStyle = BorderStyle.FixedSingle;
+            }
+            else if (control.GetType() == typeof(Label))
+            {
+                var label = control as Label;
+
+                // Fix mass driver label overflow on combo box issue
+                if (label.Name == "label17" && label.Text == "Mass Driver Destination")
+                    label.Location = new Point(label.Location.X - 10, label.Location.Y);
             }
         }
 
