@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
@@ -20,13 +18,12 @@ namespace Solaris
         override public IEnumerable<string> Dependencies => new[] { "ThemeCreator", "Lib" };
 
         // Fonts
-        static readonly private FontFamily fontFamily = new FontFamily("Tahoma");
-        static readonly private Font mainFont = new Font(fontFamily, 8, FontStyle.Regular);
-        static readonly private Font buttonFont = new Font(fontFamily, 7, FontStyle.Bold);
+        static readonly private Font mainFont = new Font("Tahoma", 8.25f, FontStyle.Regular);
+        static readonly private Font buttonFont = new Font("Segoe UI", 7, FontStyle.Bold);
 
         // Colors
         static readonly private Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
-        static readonly private Color mainTextColor = Color.FromArgb(223, 223, 223);
+        static readonly private Color mainTextColor = Color.FromArgb(210, 210, 210);
         static readonly private Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         static readonly private Color orbitColor = Color.FromArgb(64, 64, 64);
         static readonly private Color planetColor = Color.FromArgb(128, 128, 128);
@@ -36,6 +33,7 @@ namespace Solaris
             ThemeCreator.ThemeCreator.AddColorChange(Color.FromArgb(0, 0, 64), mainBackgroundColor);
             ThemeCreator.ThemeCreator.AddColorChange(Color.FromArgb(255, 255, 192), mainTextColor);
 
+            // Buttons
             ThemeCreator.ThemeCreator.AddColorChange(
                 typeof(Button),
                 new ThemeCreator.ColorChange { BackgroundColor = buttonBackgroundColor }
@@ -51,7 +49,7 @@ namespace Solaris
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-                // LimeGreen circles is used to mark orbits and colonies
+                // LimeGreen circles are used to mark orbits and colonies
                 if (pen.Color == Color.LimeGreen)
                 {
                     pen.Color = orbitColor;
@@ -77,6 +75,19 @@ namespace Solaris
                 else if (pen.Color == Color.LimeGreen && pen.Width == 1)
                 {
                     pen.Color = orbitColor;
+                }
+            });
+
+            ThemeCreator.ThemeCreator.DrawStringPrefixAction((graphics, s, font, brush) =>
+            {
+                if (brush.GetType() == typeof(SolidBrush))
+                {
+                    var solidBrush = brush as SolidBrush;
+
+                    if (solidBrush.Color == Color.FromArgb(255, 255, 192))
+                    {
+                        // solidBrush.Color = mainTextColor;
+                    }
                 }
             });
 
@@ -117,6 +128,20 @@ namespace Solaris
             ChangeButtonImage(AuroraButton.ToolbarGrid, Resources.Icon_Grid, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarUndo, Resources.Icon_Undo, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarSavePositions, Resources.Icon_SavePositions, mainTextColor);
+        }
+
+        override protected void Started()
+        {
+            FixTacticalMapSideBarTabs();
+        }
+
+        private void FixTacticalMapSideBarTabs()
+        {
+            // Patch tactical map tabs to fit on two lines after custom font changes
+            var tabSidebar = TacticalMap.Controls.Find("tabSidebar", true).First() as TabControl;
+
+            tabSidebar.SizeMode = TabSizeMode.FillToRight;
+            tabSidebar.Padding = new Point(5, 3);
         }
 
         static private void ChangeButtonImage(AuroraButton button, Bitmap image, Color color)
