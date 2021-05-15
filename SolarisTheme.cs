@@ -103,43 +103,43 @@ namespace SolarisTheme
                 }
             });
 
-            // Button images
-            ChangeButtonImage(AuroraButton.ZoomIn, Resources.Icon_ZoomIn, mainTextColor);
-            ChangeButtonImage(AuroraButton.ZoomOut, Resources.Icon_ZoomOut, mainTextColor);
-            ChangeButtonImage(AuroraButton.Up, Resources.Icon_Up, mainTextColor);
-            ChangeButtonImage(AuroraButton.Down, Resources.Icon_Down, mainTextColor);
-            ChangeButtonImage(AuroraButton.Left, Resources.Icon_Left, mainTextColor);
-            ChangeButtonImage(AuroraButton.Right, Resources.Icon_Right, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarColony, Resources.Icon_Colony, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarIndustry, Resources.Icon_Industry, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarMining, Resources.Icon_Mining, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarResearch, Resources.Icon_Research, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarWealth, Resources.Icon_Wealth, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarClass, Resources.Icon_Class, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarProject, Resources.Icon_Project, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarFleet, Resources.Icon_Fleet, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarMissileDesign, Resources.Icon_MissileDesign, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarTurrent, Resources.Icon_Turrent, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarGroundForces, Resources.Icon_GroundForces, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarCommanders, Resources.Icon_Commanders, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarMedals, Resources.Icon_Medals, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarRace, Resources.Icon_Race, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarSystem, Resources.Icon_System, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarGalactic, Resources.Icon_Galactic, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarHabitable, Resources.Icon_Galactic, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarComparison, Resources.Icon_Comparison, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarIntelligence, Resources.Icon_Intelligence, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarTechnology, Resources.Icon_Technology, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarSurvey, Resources.Icon_Survey, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarSector, Resources.Icon_Sector, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarEvents, Resources.Icon_Events, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarRefreshTactical, Resources.Icon_Refresh, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarRefreshGalactic, Resources.Icon_Refresh, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarSave, Resources.Icon_Save, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarGame, Resources.Icon_Game, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarGrid, Resources.Icon_Grid, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarUndo, Resources.Icon_Undo, mainTextColor);
-            ChangeButtonImage(AuroraButton.ToolbarSavePositions, Resources.Icon_SavePositions, mainTextColor);
+            // Toolbar button images
+            ChangeButtonStyle(AuroraButton.ZoomIn, Resources.Icon_ZoomIn, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ZoomOut, Resources.Icon_ZoomOut, mainTextColor);
+            ChangeButtonStyle(AuroraButton.Up, Resources.Icon_Up, mainTextColor);
+            ChangeButtonStyle(AuroraButton.Down, Resources.Icon_Down, mainTextColor);
+            ChangeButtonStyle(AuroraButton.Left, Resources.Icon_Left, mainTextColor);
+            ChangeButtonStyle(AuroraButton.Right, Resources.Icon_Right, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarColony, Resources.Icon_Colony, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarIndustry, Resources.Icon_Industry, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarMining, Resources.Icon_Mining, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarResearch, Resources.Icon_Research, mainTextColor, Color.Blue);
+            ChangeButtonStyle(AuroraButton.ToolbarWealth, Resources.Icon_Wealth, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarClass, Resources.Icon_Class, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarProject, Resources.Icon_Project, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarFleet, Resources.Icon_Fleet, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarMissileDesign, Resources.Icon_MissileDesign, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarTurrent, Resources.Icon_Turrent, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarGroundForces, Resources.Icon_GroundForces, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarCommanders, Resources.Icon_Commanders, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarMedals, Resources.Icon_Medals, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarRace, Resources.Icon_Race, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarSystem, Resources.Icon_System, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarGalactic, Resources.Icon_Galactic, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarHabitable, Resources.Icon_Galactic, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarComparison, Resources.Icon_Comparison, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarIntelligence, Resources.Icon_Intelligence, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarTechnology, Resources.Icon_Technology, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarSurvey, Resources.Icon_Survey, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarSector, Resources.Icon_Sector, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarEvents, Resources.Icon_Events, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarRefreshTactical, Resources.Icon_Refresh, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarRefreshGalactic, Resources.Icon_Refresh, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarSave, Resources.Icon_Save, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarGame, Resources.Icon_Game, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarGrid, Resources.Icon_Grid, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarUndo, Resources.Icon_Undo, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarSavePositions, Resources.Icon_SavePositions, mainTextColor);
 
             // Hook into Aurora forms constructors for some more advanced overrides
             var formConstructorPostfix = new HarmonyMethod(GetType().GetMethod("FormConstructorPostfix", AccessTools.all));
@@ -302,11 +302,21 @@ namespace SolarisTheme
             }
         }
 
-        private static void ChangeButtonImage(AuroraButton button, Bitmap image, Color color)
+        private static void ChangeButtonStyle(AuroraButton button, Bitmap image, Color textColor, Color? backgroundColor = null)
         {
-            Bitmap colorizedImage = ColorizeImage(image, color);
+            Bitmap colorizedImage = ColorizeImage(image, textColor);
 
             ThemeCreator.ThemeCreator.AddImageChange(button, colorizedImage);
+
+            if (backgroundColor != null)
+            {
+                ThemeCreator.ThemeCreator.AddColorChange(
+                    (Control control) => {
+                        return control.GetType() == typeof(Button) && control.Name == lib.KnowledgeBase.GetButtonName(button);
+                    },
+                    new ThemeCreator.ColorChange { BackgroundColor = backgroundColor }
+                );
+            }
         }
 
         private static Bitmap ColorizeImage(Bitmap image, Color color)
