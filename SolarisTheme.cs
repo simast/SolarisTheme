@@ -29,6 +29,7 @@ namespace SolarisTheme
         private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
         private static readonly Color orbitColor = Color.FromArgb(127, planetColor);
+        private static readonly Color economicsButtonBackgroundColor = Color.FromArgb(0, 32, 36);
 
         // Old colors
         private static readonly Color oldTextColor = Color.FromArgb(255, 255, 192);
@@ -111,11 +112,11 @@ namespace SolarisTheme
             ChangeButtonStyle(AuroraButton.Down, Resources.Icon_Down, mainTextColor);
             ChangeButtonStyle(AuroraButton.Left, Resources.Icon_Left, mainTextColor);
             ChangeButtonStyle(AuroraButton.Right, Resources.Icon_Right, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarColony, Resources.Icon_Colony, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarIndustry, Resources.Icon_Industry, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarMining, Resources.Icon_Mining, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarResearch, Resources.Icon_Research, mainTextColor, Color.Blue);
-            ChangeButtonStyle(AuroraButton.ToolbarWealth, Resources.Icon_Wealth, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarColony, Resources.Icon_Colony, mainTextColor, economicsButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarIndustry, Resources.Icon_Industry, mainTextColor, economicsButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarMining, Resources.Icon_Mining, mainTextColor, economicsButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarResearch, Resources.Icon_Research, mainTextColor, economicsButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarWealth, Resources.Icon_Wealth, mainTextColor, economicsButtonBackgroundColor);
             ChangeButtonStyle(AuroraButton.ToolbarClass, Resources.Icon_Class, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarProject, Resources.Icon_Project, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarFleet, Resources.Icon_Fleet, mainTextColor);
