@@ -23,19 +23,27 @@ namespace SolarisTheme
         private static readonly Font mainFont = new Font("Tahoma", 8.25f, FontStyle.Regular);
         private static readonly Font buttonFont = new Font("Tahoma", 7, FontStyle.Bold);
 
-        // Colors
+        // Our new colors
         private static readonly Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
         private static readonly Color mainTextColor = Color.FromArgb(210, 210, 210);
         private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
         private static readonly Color orbitColor = Color.FromArgb(127, planetColor);
 
+        // Old colors
+        private static readonly Color oldTextColor = Color.FromArgb(255, 255, 192);
+        private static readonly Color oldBackgrounColor = Color.FromArgb(0, 0, 64);
+        private static readonly Color oldPlayerContactColor = Color.FromArgb(255, 255, 192);
+        private static readonly Color oldCivilianContactColor = Color.FromArgb(0, 206, 209);
+        private static readonly Color oldCometPathColor = Color.LimeGreen;
+        private static readonly Color oldOrbitColor = Color.LimeGreen;
+
         protected override void Loaded(Harmony harmony)
         {
             lib = GetDependency<Lib.Lib>("Lib");
 
-            ThemeCreator.ThemeCreator.AddColorChange(Color.FromArgb(0, 0, 64), mainBackgroundColor);
-            ThemeCreator.ThemeCreator.AddColorChange(Color.FromArgb(255, 255, 192), mainTextColor);
+            ThemeCreator.ThemeCreator.AddColorChange(oldBackgrounColor, mainBackgroundColor);
+            ThemeCreator.ThemeCreator.AddColorChange(oldTextColor, mainTextColor);
 
             // Buttons
             ThemeCreator.ThemeCreator.AddColorChange(
@@ -53,8 +61,8 @@ namespace SolarisTheme
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-                // Note that LimeGreen circles are used to mark colonies as well, not just orbits
-                if (pen.Color == Color.LimeGreen)
+                // Note that the same color circles are used to mark colonies as well, not just orbits
+                if (pen.Color == oldOrbitColor)
                 {
                     pen.Color = orbitColor;
                 }
@@ -71,12 +79,12 @@ namespace SolarisTheme
 
                 // Movement tails
                 // TODO: Hostiles
-                if (pen.Color == Color.FromArgb(0, 206, 209) || pen.Color == Color.FromArgb(255, 255, 192))
+                if (pen.Color == oldCivilianContactColor || pen.Color == oldPlayerContactColor)
                 {
                     pen.Color = ControlPaint.Dark(pen.Color, 0.5f);
                 }
-                // Comet path (distance ruler also uses LimeGreen but has pen.Width > 1)
-                else if (pen.Color == Color.LimeGreen && pen.Width == 1)
+                // Comet path (distance ruler also uses the same color but has pen.Width > 1)
+                else if (pen.Color == oldCometPathColor && pen.Width == 1)
                 {
                     pen.Color = orbitColor;
                 }
@@ -88,7 +96,7 @@ namespace SolarisTheme
                 {
                     var solidBrush = brush as SolidBrush;
 
-                    if (solidBrush.Color == Color.FromArgb(255, 255, 192))
+                    if (solidBrush.Color == oldTextColor)
                     {
                         // solidBrush.Color = mainTextColor;
                     }
@@ -208,12 +216,11 @@ namespace SolarisTheme
             if (tabControl.Name == "tabSidebar")
             {
                 tabControl.Padding = new Point(5, 3);
-            } 
+            }
         }
 
         private static void ApplyButtonChanges(Button button)
         {
-            button.BackgroundImageLayout = ImageLayout.Center;
             button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderColor = mainBackgroundColor;
             button.FlatAppearance.BorderSize = 2;
@@ -248,18 +255,19 @@ namespace SolarisTheme
             {
                 listView.OwnerDraw = false;
 
+                // Get rid of the old text color in system list view
                 listView.Invalidated += (Object sender, InvalidateEventArgs e) =>
                 {
                     foreach (ListViewItem item in ((ListView)sender).Items)
                     {
-                        if (item.ForeColor == Color.FromArgb(255, 255, 192))
+                        if (item.ForeColor == oldTextColor)
                         {
                             item.ForeColor = mainTextColor;
                         }
 
                         foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
                         {
-                            if (subItem.ForeColor == Color.FromArgb(255, 255, 192))
+                            if (subItem.ForeColor == oldTextColor)
                             {
                                 subItem.ForeColor = mainTextColor;
                             }
