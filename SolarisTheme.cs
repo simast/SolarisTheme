@@ -20,16 +20,15 @@ namespace SolarisTheme
         private static Lib.Lib lib;
 
         // Fonts
-        private static readonly FontFamily fontFamily = new FontFamily("Tahoma");
-        private static readonly Font mainFont = new Font(fontFamily, 8.25f, FontStyle.Regular);
-        private static readonly Font buttonFont = new Font(fontFamily, 7, FontStyle.Bold);
+        private static readonly Font mainFont = new Font("Tahoma", 8.25f, FontStyle.Regular);
+        private static readonly Font buttonFont = new Font("Tahoma", 7, FontStyle.Bold);
 
         // Colors
         private static readonly Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
         private static readonly Color mainTextColor = Color.FromArgb(210, 210, 210);
         private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
-        private static readonly Color orbitColor = Color.FromArgb(64, 64, 64);
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
+        private static readonly Color orbitColor = Color.FromArgb(127, planetColor);
 
         protected override void Loaded(Harmony harmony)
         {
@@ -54,9 +53,11 @@ namespace SolarisTheme
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-                // LimeGreen circles are used to mark orbits and colonies
+                // Note that LimeGreen circles are used to mark colonies as well, not just orbits
                 if (pen.Color == Color.LimeGreen)
+                {
                     pen.Color = orbitColor;
+                }
             });
 
             ThemeCreator.ThemeCreator.FillEllipsePrefixAction((graphics, brush) =>
@@ -71,10 +72,14 @@ namespace SolarisTheme
                 // Movement tails
                 // TODO: Hostiles
                 if (pen.Color == Color.FromArgb(0, 206, 209) || pen.Color == Color.FromArgb(255, 255, 192))
+                {
                     pen.Color = ControlPaint.Dark(pen.Color, 0.5f);
+                }
                 // Comet path (distance ruler also uses LimeGreen but has pen.Width > 1)
                 else if (pen.Color == Color.LimeGreen && pen.Width == 1)
+                {
                     pen.Color = orbitColor;
+                }
             });
 
             ThemeCreator.ThemeCreator.DrawStringPrefixAction((graphics, s, font, brush) =>
@@ -132,8 +137,12 @@ namespace SolarisTheme
             var formConstructorPostfix = new HarmonyMethod(GetType().GetMethod("FormConstructorPostfix", AccessTools.all));
 
             foreach (var form in AuroraAssembly.GetTypes().Where(t => typeof(Form).IsAssignableFrom(t)))
+            {
                 foreach (var ctor in form.GetConstructors())
+                {
                     harmony.Patch(ctor, postfix: formConstructorPostfix);
+                }
+            }
         }
 
         private static void FormConstructorPostfix(Form __instance)
@@ -148,107 +157,148 @@ namespace SolarisTheme
         {
             ApplyChanges(control);
 
-            foreach (Control ctrl in control.Controls)
-                IterateControls(ctrl);
+            foreach (Control childControl in control.Controls)
+            {
+                IterateControls(childControl);
+            } 
         }
 
         private static void ApplyChanges(Control control)
         {
+
             if (control.GetType() == typeof(TabControl))
             {
-                var tabControl = control as TabControl;
-
-                tabControl.SizeMode = TabSizeMode.FillToRight;
-
-                // Patch tactical map tabs to fit on two lines after custom font changes
-                if (tabControl.Name == "tabSidebar")
-                    tabControl.Padding = new Point(5, 3);
+                ApplyTabControlChanges(control as TabControl);
             }
             else if (control.GetType() == typeof(Button))
             {
-                var button = control as Button;
-
-                button.BackgroundImageLayout = ImageLayout.Center;
-                button.FlatStyle = FlatStyle.Flat;
-                button.FlatAppearance.BorderColor = mainBackgroundColor;
-                button.FlatAppearance.BorderSize = 2;
-
-                if (button.Name != lib.KnowledgeBase.GetButtonName(AuroraButton.SubPulse)
-                    && button.Name != lib.KnowledgeBase.GetButtonName(AuroraButton.Increment))
-                {
-                    button.AutoSize = true;
-                }
+                ApplyButtonChanges(control as Button);
             }
             else if (control.GetType() == typeof(ComboBox))
             {
-                var comboBox = control as ComboBox;
-
-                comboBox.FlatStyle = FlatStyle.Flat;
-                comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                ApplyComboBoxChanges(control as ComboBox);
             }
             else if (control.GetType() == typeof(TreeView))
             {
-                var treeView = control as TreeView;
-
-                treeView.BorderStyle = BorderStyle.None;
+                ApplyTreeViewChanges(control as TreeView);
             }
             else if (control.GetType() == typeof(ListView))
             {
-                var listView = control as ListView;
-
-                if (listView.BorderStyle == BorderStyle.Fixed3D)
-                    listView.BorderStyle = BorderStyle.FixedSingle;
-
-                if (listView.Name == "lstvSB")
-                {
-                    listView.OwnerDraw = false;
-
-                    listView.Invalidated += (Object sender, InvalidateEventArgs e) =>
-                    {
-                        foreach (ListViewItem item in ((ListView)sender).Items)
-                        {
-                            if (item.ForeColor == Color.FromArgb(255, 255, 192))
-                                item.ForeColor = mainTextColor;
-
-                            foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
-                            {
-                                if (subItem.ForeColor == Color.FromArgb(255, 255, 192))
-                                    subItem.ForeColor = mainTextColor;
-                            }
-                        }
-                    };
-                }
+                ApplyListViewChanges(control as ListView);
             }
             else if (control.GetType() == typeof(ListBox))
             {
-                var listBox = control as ListBox;
-
-                if (listBox.BorderStyle == BorderStyle.Fixed3D)
-                    listBox.BorderStyle = BorderStyle.FixedSingle;
+                ApplyListBoxChanges(control as ListBox);
             }
             else if (control.GetType() == typeof(FlowLayoutPanel))
             {
-                var flowLayoutPanel = control as FlowLayoutPanel;
-
-                if (flowLayoutPanel.BorderStyle == BorderStyle.Fixed3D)
-                    flowLayoutPanel.BorderStyle = BorderStyle.FixedSingle;
+                ApplyFlowLayoutPanelChanges(control as FlowLayoutPanel);
             }
             else if (control.GetType() == typeof(Label))
             {
-                var label = control as Label;
+                ApplyLabelChanges(control as Label);
+            }
+        }
 
-                // Fix mass driver label overflow on combo box issue
-                if (label.Name == "label17" && label.Text == "Mass Driver Destination")
-                    label.Location = new Point(label.Location.X - 10, label.Location.Y);
+        private static void ApplyTabControlChanges(TabControl tabControl)
+        {
+            tabControl.SizeMode = TabSizeMode.FillToRight;
+
+            // Patch tactical map tabs to fit on two lines (necessary due to custom font)
+            if (tabControl.Name == "tabSidebar")
+            {
+                tabControl.Padding = new Point(5, 3);
+            } 
+        }
+
+        private static void ApplyButtonChanges(Button button)
+        {
+            button.BackgroundImageLayout = ImageLayout.Center;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = mainBackgroundColor;
+            button.FlatAppearance.BorderSize = 2;
+
+            // With some exceptions just enable auto size for buttons (necessary due to custom font)
+            if (button.Name != lib.KnowledgeBase.GetButtonName(AuroraButton.SubPulse)
+                && button.Name != lib.KnowledgeBase.GetButtonName(AuroraButton.Increment))
+            {
+                button.AutoSize = true;
+            }
+        }
+
+        private static void ApplyComboBoxChanges(ComboBox comboBox)
+        {
+            comboBox.FlatStyle = FlatStyle.Flat;
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+        }
+
+        private static void ApplyTreeViewChanges(TreeView treeView)
+        {
+            treeView.BorderStyle = BorderStyle.None;
+        }
+
+        private static void ApplyListViewChanges(ListView listView)
+        {
+            if (listView.BorderStyle == BorderStyle.Fixed3D)
+            {
+                listView.BorderStyle = BorderStyle.FixedSingle;
+            }
+
+            if (listView.Name == "lstvSB")
+            {
+                listView.OwnerDraw = false;
+
+                listView.Invalidated += (Object sender, InvalidateEventArgs e) =>
+                {
+                    foreach (ListViewItem item in ((ListView)sender).Items)
+                    {
+                        if (item.ForeColor == Color.FromArgb(255, 255, 192))
+                        {
+                            item.ForeColor = mainTextColor;
+                        }
+
+                        foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
+                        {
+                            if (subItem.ForeColor == Color.FromArgb(255, 255, 192))
+                            {
+                                subItem.ForeColor = mainTextColor;
+                            }
+                        }
+                    }
+                };
+            }
+        }
+
+        private static void ApplyListBoxChanges(ListBox listBox)
+        {
+            if (listBox.BorderStyle == BorderStyle.Fixed3D)
+            {
+                listBox.BorderStyle = BorderStyle.FixedSingle;
+            }
+        }
+
+        private static void ApplyFlowLayoutPanelChanges(FlowLayoutPanel flowLayoutPanel)
+        {
+            if (flowLayoutPanel.BorderStyle == BorderStyle.Fixed3D)
+            {
+                flowLayoutPanel.BorderStyle = BorderStyle.FixedSingle;
+            }
+        }
+
+        private static void ApplyLabelChanges(Label label)
+        {
+            // Fix mass driver label overflow on top of combo box issue
+            if (label.Name == "label17" && label.Text == "Mass Driver Destination")
+            {
+                label.Location = new Point(label.Location.X - 10, label.Location.Y);
             }
         }
 
         private static void ChangeButtonImage(AuroraButton button, Bitmap image, Color color)
         {
-            ThemeCreator.ThemeCreator.AddImageChange(
-                button,
-                ColorizeImage(image, color)
-            );
+            Bitmap colorizedImage = ColorizeImage(image, color);
+
+            ThemeCreator.ThemeCreator.AddImageChange(button, colorizedImage);
         }
 
         private static Bitmap ColorizeImage(Bitmap image, Color color)
