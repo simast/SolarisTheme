@@ -14,21 +14,22 @@ namespace SolarisTheme
 {
     public class SolarisTheme : AuroraPatch.Patch
     {
-        override public string Description => "Solaris Theme";
-        override public IEnumerable<string> Dependencies => new[] { "ThemeCreator", "Lib" };
+        public override string Description => "Solaris Theme";
+        public override IEnumerable<string> Dependencies => new[] { "ThemeCreator", "Lib" };
 
         // Fonts
-        static readonly private Font mainFont = new Font("Tahoma", 8.25f, FontStyle.Regular);
-        static readonly private Font buttonFont = new Font("Segoe UI", 7, FontStyle.Bold);
+        private static readonly FontFamily fontFamily = new FontFamily("Tahoma");
+        private static readonly Font mainFont = new Font(fontFamily, 8.25f, FontStyle.Regular);
+        private static readonly Font buttonFont = new Font(fontFamily, 7, FontStyle.Bold);
 
         // Colors
-        static readonly private Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
-        static readonly private Color mainTextColor = Color.FromArgb(210, 210, 210);
-        static readonly private Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
-        static readonly private Color orbitColor = Color.FromArgb(64, 64, 64);
-        static readonly private Color planetColor = Color.FromArgb(128, 128, 128);
+        private static readonly Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
+        private static readonly Color mainTextColor = Color.FromArgb(210, 210, 210);
+        private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
+        private static readonly Color orbitColor = Color.FromArgb(64, 64, 64);
+        private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
 
-        override protected void Loaded(Harmony harmony)
+        protected override void Loaded(Harmony harmony)
         {
             ThemeCreator.ThemeCreator.AddColorChange(Color.FromArgb(0, 0, 64), mainBackgroundColor);
             ThemeCreator.ThemeCreator.AddColorChange(Color.FromArgb(255, 255, 192), mainTextColor);
@@ -128,23 +129,69 @@ namespace SolarisTheme
             ChangeButtonImage(AuroraButton.ToolbarGrid, Resources.Icon_Grid, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarUndo, Resources.Icon_Undo, mainTextColor);
             ChangeButtonImage(AuroraButton.ToolbarSavePositions, Resources.Icon_SavePositions, mainTextColor);
+
+            // Hook into Aurora forms constructors for some more advanced overrides
+            var formConstructorPostfix = new HarmonyMethod(GetType().GetMethod("FormConstructorPostfix", AccessTools.all));
+
+            foreach (var form in AuroraAssembly.GetTypes().Where(t => typeof(Form).IsAssignableFrom(t)))
+            {
+                foreach (var ctor in form.GetConstructors())
+                {
+                    harmony.Patch(ctor, postfix: formConstructorPostfix);
+                }
+            }
         }
 
-        override protected void Started()
+        private static void FormConstructorPostfix(Form __instance)
         {
-            FixTacticalMapSideBarTabs();
+            __instance.HandleCreated += (Object sender, EventArgs e) =>
+            {
+                IterateControls((Control)sender);
+            };
         }
 
-        private void FixTacticalMapSideBarTabs()
+        private static void IterateControls(Control control)
         {
-            // Patch tactical map tabs to fit on two lines after custom font changes
-            var tabSidebar = TacticalMap.Controls.Find("tabSidebar", true).First() as TabControl;
+            ApplyChanges(control);
 
-            tabSidebar.SizeMode = TabSizeMode.FillToRight;
-            tabSidebar.Padding = new Point(5, 3);
+            foreach (Control ctrl in control.Controls)
+            {
+                IterateControls(ctrl);
+            }
         }
 
-        static private void ChangeButtonImage(AuroraButton button, Bitmap image, Color color)
+        private static void ApplyChanges(Control control)
+        {
+            if (control.GetType() == typeof(TabControl))
+            {
+                var tabControl = control as TabControl;
+
+                tabControl.SizeMode = TabSizeMode.FillToRight;
+
+                // Patch tactical map tabs to fit on two lines after custom font changes
+                if (tabControl.Name == "tabSidebar")
+                {
+                    tabControl.Padding = new Point(5, 3);
+                }
+            }
+            else if (control.GetType() == typeof(Button))
+            {
+                var button = control as Button;
+
+                button.BackgroundImageLayout = ImageLayout.Center;
+                button.FlatStyle = FlatStyle.Flat;
+                button.FlatAppearance.BorderColor = mainBackgroundColor;
+                button.FlatAppearance.BorderSize = 2;
+            }
+            else if (control.GetType() == typeof(ComboBox))
+            {
+                var comboBox = control as ComboBox;
+
+                comboBox.FlatStyle = FlatStyle.Flat;
+            }
+        }
+
+        private static void ChangeButtonImage(AuroraButton button, Bitmap image, Color color)
         {
             ThemeCreator.ThemeCreator.AddImageChange(
                 button,
@@ -152,7 +199,7 @@ namespace SolarisTheme
             );
         }
 
-        static private Bitmap ColorizeImage(Bitmap image, Color color)
+        private static Bitmap ColorizeImage(Bitmap image, Color color)
         {
             var imageAttributes = new ImageAttributes();
 
