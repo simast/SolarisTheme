@@ -7,8 +7,8 @@
     <ProjectGuid>{3A3FAD8E-8BEC-42F0-938E-DB49927CF773}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Solaris</RootNamespace>
-    <AssemblyName>Solaris</AssemblyName>
+    <RootNamespace>SolarisTheme</RootNamespace>
+    <AssemblyName>SolarisTheme</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

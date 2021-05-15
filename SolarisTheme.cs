@@ -8,9 +8,9 @@ using System.Drawing.Drawing2D;
 using HarmonyLib;
 using Lib;
 using System.Drawing.Imaging;
-using Solaris.Properties;
+using SolarisTheme.Properties;
 
-namespace Solaris
+namespace SolarisTheme
 {
     public class SolarisTheme : AuroraPatch.Patch
     {
