@@ -174,7 +174,6 @@ namespace SolarisTheme
 
         private static void ApplyChanges(Control control)
         {
-
             if (control.GetType() == typeof(TabControl))
             {
                 ApplyTabControlChanges(control as TabControl);
@@ -206,6 +205,10 @@ namespace SolarisTheme
             else if (control.GetType() == typeof(Label))
             {
                 ApplyLabelChanges(control as Label);
+            }
+            else if (control is Form)
+            {
+                ApplyFormChanges(control as Form);
             }
         }
 
@@ -301,6 +304,11 @@ namespace SolarisTheme
             {
                 label.Location = new Point(label.Location.X - 10, label.Location.Y);
             }
+        }
+
+        private static void ApplyFormChanges(Form form)
+        {
+            form.ShowIcon = false;
         }
 
         private static void ChangeButtonStyle(AuroraButton button, Bitmap image, Color textColor, Color? backgroundColor = null)
