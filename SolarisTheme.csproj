@@ -181,5 +181,11 @@
   <ItemGroup>
     <None Include="Resources\Icons\SpaceMasterOn.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\AutoTurnsOff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\AutoTurnsOn.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

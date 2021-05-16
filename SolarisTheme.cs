@@ -32,6 +32,7 @@ namespace SolarisTheme
         private static readonly Color orbitColor = Color.FromArgb(128, planetColor);
         private static readonly Color economicsButtonBackgroundColor = Color.FromArgb(22, 38, 39);
         private static readonly Color enabledSpaceMasterButtonColor = Color.FromArgb(248, 231, 28);
+        private static readonly Color enabledAutoTurnsButtonColor = Color.FromArgb(126, 211, 33);
 
         // Old colors
         private static readonly Color oldTextColor = Color.FromArgb(255, 255, 192);
@@ -45,6 +46,7 @@ namespace SolarisTheme
         private static string lastActiveTimeIncrement;
         private static string activeSubPulse;
         private static bool isSpaceMasterEnabled = false;
+        private static bool isAutoTurnsEnabled = false;
 
         private const int EM_SETMARGINS = 0xd3;
         private const int EC_RIGHTMARGIN = 2;
@@ -72,6 +74,11 @@ namespace SolarisTheme
         private static bool IsSpaceMasterButton(Button button)
         {
             return button.Name == lib.KnowledgeBase.GetButtonName(AuroraButton.SM);
+        }
+
+        private static bool IsAutoTurnsButton(Button button)
+        {
+            return button.Name == lib.KnowledgeBase.GetButtonName(AuroraButton.ToolbarAuto);
         }
 
         protected override void Loaded(Harmony harmony)
@@ -280,6 +287,11 @@ namespace SolarisTheme
                 button.Click += OnSpaceMasterButtonClick;
                 ApplySpaceMasterButtonStyle(button);
             }
+            else if (IsAutoTurnsButton(button))
+            {
+                button.Click += OnAutoTurnsButtonClick;
+                ApplyAutoTurnsButtonStyle(button);
+            }
         }
 
         private static void ApplyComboBoxChanges(ComboBox comboBox)
@@ -393,6 +405,13 @@ namespace SolarisTheme
             }
         }
 
+        private static void ApplyActiveButtonStyle(Button button, bool isActive)
+        {
+            button.FlatAppearance.BorderColor = isActive
+                ? ControlPaint.Light(buttonBackgroundColor, 0.5f)
+                : mainBackgroundColor;
+        }
+
         private static void OnSpaceMasterButtonClick(Object sender, EventArgs e)
         {
             var button = sender as Button;
@@ -408,11 +427,19 @@ namespace SolarisTheme
             button.BackgroundImage = ColorizeImage(image, color);
         }
 
-        private static void ApplyActiveButtonStyle(Button button, bool isActive)
+        private static void OnAutoTurnsButtonClick(Object sender, EventArgs e)
         {
-            button.FlatAppearance.BorderColor = isActive
-                ? ControlPaint.Light(buttonBackgroundColor, 0.5f)
-                : mainBackgroundColor;
+            var button = sender as Button;
+            isAutoTurnsEnabled = !isAutoTurnsEnabled;
+            ApplyAutoTurnsButtonStyle(button);
+        }
+
+        private static void ApplyAutoTurnsButtonStyle(Button button)
+        {
+            Bitmap image = isAutoTurnsEnabled ? Resources.Icon_AutoTurnsOn : Resources.Icon_AutoTurnsOff;
+            Color color = isAutoTurnsEnabled ? enabledAutoTurnsButtonColor : mainTextColor;
+
+            button.BackgroundImage = ColorizeImage(image, color);
         }
 
         private static void ChangeButtonStyle(AuroraButton button, Bitmap image, Color textColor, Color? backgroundColor = null)

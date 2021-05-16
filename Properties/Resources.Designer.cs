@@ -63,6 +63,26 @@ namespace SolarisTheme.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Icon_AutoTurnsOff {
+            get {
+                object obj = ResourceManager.GetObject("Icon_AutoTurnsOff", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_AutoTurnsOn {
+            get {
+                object obj = ResourceManager.GetObject("Icon_AutoTurnsOn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Icon_Class {
             get {
                 object obj = ResourceManager.GetObject("Icon_Class", resourceCulture);
