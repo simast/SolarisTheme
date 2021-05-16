@@ -41,6 +41,9 @@ namespace SolarisTheme
         private static readonly Color oldCometPathColor = Color.LimeGreen;
         private static readonly Color oldOrbitColor = Color.LimeGreen;
 
+        private static string lastActiveTimeIncrement;
+        private static string activeSubPulse;
+
         private const int EM_SETMARGINS = 0xd3;
         private const int EC_RIGHTMARGIN = 2;
         private const int EC_LEFTMARGIN = 1;
@@ -52,6 +55,16 @@ namespace SolarisTheme
         {
             SendMessage(textBox.Handle, EM_SETMARGINS, EC_RIGHTMARGIN, padding << 16);
             SendMessage(textBox.Handle, EM_SETMARGINS, EC_LEFTMARGIN, padding);
+        }
+
+        private static bool IsTimeIncrementButton(Button button)
+        {
+            return button.Name.StartsWith("cmdIncrement");
+        }
+
+        private static bool IsSubPulseButton(Button button)
+        {
+            return button.Name.StartsWith("cmdSubPulse");
         }
 
         protected override void Loaded(Harmony harmony)
@@ -66,6 +79,9 @@ namespace SolarisTheme
                 typeof(Button),
                 new ThemeCreator.ColorChange { BackgroundColor = buttonBackgroundColor }
             );
+
+            lastActiveTimeIncrement = lib.KnowledgeBase.GetButtonName(AuroraButton.Increment);
+            activeSubPulse = lib.KnowledgeBase.GetButtonName(AuroraButton.SubPulse);
 
             ThemeCreator.ThemeCreator.AddFontChange(mainFont);
             ThemeCreator.ThemeCreator.AddFontChange(typeof(Button), buttonFont);
@@ -103,19 +119,6 @@ namespace SolarisTheme
                 else if (pen.Color == oldCometPathColor && pen.Width == 1)
                 {
                     pen.Color = orbitColor;
-                }
-            });
-
-            ThemeCreator.ThemeCreator.DrawStringPrefixAction((graphics, s, font, brush) =>
-            {
-                if (brush.GetType() == typeof(SolidBrush))
-                {
-                    var solidBrush = brush as SolidBrush;
-
-                    if (solidBrush.Color == oldTextColor)
-                    {
-                        // solidBrush.Color = mainTextColor;
-                    }
                 }
             });
 
@@ -257,6 +260,18 @@ namespace SolarisTheme
             {
                 button.AutoSize = true;
             }
+
+            if (IsTimeIncrementButton(button))
+            {
+                button.Click += OnTimeIncrementButtonClick;
+                ApplyActiveButtonStyle(button, button.Name == lastActiveTimeIncrement);
+            }
+
+            if (IsSubPulseButton(button))
+            {
+                button.Click += OnSubPulseButtonClick;
+                ApplyActiveButtonStyle(button, button.Name == activeSubPulse);
+            }
         }
 
         private static void ApplyComboBoxChanges(ComboBox comboBox)
@@ -343,6 +358,38 @@ namespace SolarisTheme
         private static void ApplyFormChanges(Form form)
         {
             form.ShowIcon = false;
+        }
+
+        private static void OnTimeIncrementButtonClick(Object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            lastActiveTimeIncrement = button.Name;
+
+            List<Button> timeIncrementButtons = lib.KnowledgeBase.GetTimeIncrementButtons().ToList();
+            timeIncrementButtons.AddRange(lib.KnowledgeBase.GetTimeIncrementButtonsGalacticMap().ToList());
+
+            foreach (Button timeIncrementButton in timeIncrementButtons)
+            {
+                ApplyActiveButtonStyle(timeIncrementButton, timeIncrementButton.Name == lastActiveTimeIncrement);
+            }
+        }
+
+        private static void OnSubPulseButtonClick(Object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            activeSubPulse = button.Name;
+
+            foreach (Button subPulseButton in lib.KnowledgeBase.GetSubPulseButtons())
+            {
+                ApplyActiveButtonStyle(subPulseButton, subPulseButton.Name == activeSubPulse);
+            }
+        }
+
+        private static void ApplyActiveButtonStyle(Button button, bool isActive)
+        {
+            button.FlatAppearance.BorderColor = isActive
+                ? ControlPaint.Light(buttonBackgroundColor, 0.5f)
+                : mainBackgroundColor;
         }
 
         private static void ChangeButtonStyle(AuroraButton button, Bitmap image, Color textColor, Color? backgroundColor = null)
