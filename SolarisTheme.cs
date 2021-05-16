@@ -31,6 +31,7 @@ namespace SolarisTheme
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
         private static readonly Color orbitColor = Color.FromArgb(128, planetColor);
         private static readonly Color economicsButtonBackgroundColor = Color.FromArgb(22, 38, 39);
+        private static readonly Color enabledSpaceMasterButtonColor = Color.FromArgb(248, 231, 28);
 
         // Old colors
         private static readonly Color oldTextColor = Color.FromArgb(255, 255, 192);
@@ -43,6 +44,7 @@ namespace SolarisTheme
 
         private static string lastActiveTimeIncrement;
         private static string activeSubPulse;
+        private static bool isSpaceMasterEnabled = false;
 
         private const int EM_SETMARGINS = 0xd3;
         private const int EC_RIGHTMARGIN = 2;
@@ -65,6 +67,11 @@ namespace SolarisTheme
         private static bool IsSubPulseButton(Button button)
         {
             return button.Name.StartsWith("cmdSubPulse");
+        }
+
+        private static bool IsSpaceMasterButton(Button button)
+        {
+            return button.Name == lib.KnowledgeBase.GetButtonName(AuroraButton.SM);
         }
 
         protected override void Loaded(Harmony harmony)
@@ -159,9 +166,6 @@ namespace SolarisTheme
             ChangeButtonStyle(AuroraButton.ToolbarGrid, Resources.Icon_Grid, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarUndo, Resources.Icon_Undo, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarSavePositions, Resources.Icon_SavePositions, mainTextColor);
-
-            // TODO
-            // ChangeButtonStyle(AuroraButton.SM, Resources.Icon_SpaceMasterOff, mainTextColor);
 
             // Hook into Aurora forms constructors for some more advanced overrides
             var formConstructorPostfix = new HarmonyMethod(GetType().GetMethod("FormConstructorPostfix", AccessTools.all));
@@ -266,11 +270,15 @@ namespace SolarisTheme
                 button.Click += OnTimeIncrementButtonClick;
                 ApplyActiveButtonStyle(button, button.Name == lastActiveTimeIncrement);
             }
-
-            if (IsSubPulseButton(button))
+            else if (IsSubPulseButton(button))
             {
                 button.Click += OnSubPulseButtonClick;
                 ApplyActiveButtonStyle(button, button.Name == activeSubPulse);
+            }
+            else if (IsSpaceMasterButton(button))
+            {
+                button.Click += OnSpaceMasterButtonClick;
+                ApplySpaceMasterButtonStyle(button);
             }
         }
 
@@ -383,6 +391,21 @@ namespace SolarisTheme
             {
                 ApplyActiveButtonStyle(subPulseButton, subPulseButton.Name == activeSubPulse);
             }
+        }
+
+        private static void OnSpaceMasterButtonClick(Object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            isSpaceMasterEnabled = !isSpaceMasterEnabled;
+            ApplySpaceMasterButtonStyle(button);
+        }
+
+        private static void ApplySpaceMasterButtonStyle(Button button)
+        {
+            Bitmap image = isSpaceMasterEnabled ? Resources.Icon_SpaceMasterOn : Resources.Icon_SpaceMasterOff;
+            Color color = isSpaceMasterEnabled ? enabledSpaceMasterButtonColor : mainTextColor;
+
+            button.BackgroundImage = ColorizeImage(image, color);
         }
 
         private static void ApplyActiveButtonStyle(Button button, bool isActive)
