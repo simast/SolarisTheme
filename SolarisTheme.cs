@@ -29,7 +29,7 @@ namespace SolarisTheme
         private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
         private static readonly Color orbitColor = Color.FromArgb(127, planetColor);
-        private static readonly Color economicsButtonBackgroundColor = Color.FromArgb(0, 32, 36);
+        private static readonly Color economicsButtonBackgroundColor = Color.FromArgb(22, 38, 39);
 
         // Old colors
         private static readonly Color oldTextColor = Color.FromArgb(255, 255, 192);
@@ -142,6 +142,9 @@ namespace SolarisTheme
             ChangeButtonStyle(AuroraButton.ToolbarGrid, Resources.Icon_Grid, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarUndo, Resources.Icon_Undo, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarSavePositions, Resources.Icon_SavePositions, mainTextColor);
+
+            // TODO
+            // ChangeButtonStyle(AuroraButton.SM, Resources.Icon_SpaceMasterOff, mainTextColor);
 
             // Hook into Aurora forms constructors for some more advanced overrides
             var formConstructorPostfix = new HarmonyMethod(GetType().GetMethod("FormConstructorPostfix", AccessTools.all));

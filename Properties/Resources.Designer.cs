@@ -313,6 +313,26 @@ namespace SolarisTheme.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Icon_SpaceMasterOff {
+            get {
+                object obj = ResourceManager.GetObject("Icon_SpaceMasterOff", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_SpaceMasterOn {
+            get {
+                object obj = ResourceManager.GetObject("Icon_SpaceMasterOn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Icon_Survey {
             get {
                 object obj = ResourceManager.GetObject("Icon_Survey", resourceCulture);

@@ -175,5 +175,11 @@
   <ItemGroup>
     <None Include="Resources\Icons\SavePositions.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\SpaceMasterOff.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\SpaceMasterOn.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
