@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Linq;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 
 using HarmonyLib;
 using Lib;
-using System.Drawing.Imaging;
 using SolarisTheme.Properties;
 
 namespace SolarisTheme
@@ -28,7 +29,7 @@ namespace SolarisTheme
         private static readonly Color mainTextColor = Color.FromArgb(210, 210, 210);
         private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
-        private static readonly Color orbitColor = Color.FromArgb(127, planetColor);
+        private static readonly Color orbitColor = Color.FromArgb(128, planetColor);
         private static readonly Color economicsButtonBackgroundColor = Color.FromArgb(22, 38, 39);
 
         // Old colors
@@ -39,6 +40,19 @@ namespace SolarisTheme
         private static readonly Color oldHostileContactColor = Color.FromArgb(255, 0, 0);
         private static readonly Color oldCometPathColor = Color.LimeGreen;
         private static readonly Color oldOrbitColor = Color.LimeGreen;
+
+        private const int EM_SETMARGINS = 0xd3;
+        private const int EC_RIGHTMARGIN = 2;
+        private const int EC_LEFTMARGIN = 1;
+
+        [DllImport("User32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
+        private static void SetTextBoxHorizontalPadding(TextBox textBox, int padding)
+        {
+            SendMessage(textBox.Handle, EM_SETMARGINS, EC_RIGHTMARGIN, padding << 16);
+            SendMessage(textBox.Handle, EM_SETMARGINS, EC_LEFTMARGIN, padding);
+        }
 
         protected override void Loaded(Harmony harmony)
         {
@@ -173,7 +187,7 @@ namespace SolarisTheme
             foreach (Control childControl in control.Controls)
             {
                 IterateControls(childControl);
-            } 
+            }
         }
 
         private static void ApplyChanges(Control control)
@@ -311,6 +325,10 @@ namespace SolarisTheme
             {
                 textBox.BorderStyle = BorderStyle.FixedSingle;
             }
+
+            // Minor tweak for consistency - align TextBox horizontal padding to match
+            // ListView and other controls.
+            SetTextBoxHorizontalPadding(textBox, 4);
         }
 
         private static void ApplyLabelChanges(Label label)
@@ -336,7 +354,8 @@ namespace SolarisTheme
             if (backgroundColor != null)
             {
                 ThemeCreator.ThemeCreator.AddColorChange(
-                    (Control control) => {
+                    (Control control) =>
+                    {
                         return control.GetType() == typeof(Button) && control.Name == lib.KnowledgeBase.GetButtonName(button);
                     },
                     new ThemeCreator.ColorChange { BackgroundColor = backgroundColor }
