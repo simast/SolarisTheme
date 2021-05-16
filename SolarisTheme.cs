@@ -210,6 +210,10 @@ namespace SolarisTheme
             {
                 ApplyLabelChanges(control as Label);
             }
+            else if (control.GetType() == typeof(TextBox))
+            {
+                ApplyTextBoxChanges(control as TextBox);
+            }
             else if (control is Form)
             {
                 ApplyFormChanges(control as Form);
@@ -298,6 +302,14 @@ namespace SolarisTheme
             if (flowLayoutPanel.BorderStyle == BorderStyle.Fixed3D)
             {
                 flowLayoutPanel.BorderStyle = BorderStyle.FixedSingle;
+            }
+        }
+
+        private static void ApplyTextBoxChanges(TextBox textBox)
+        {
+            if (textBox.BorderStyle == BorderStyle.Fixed3D)
+            {
+                textBox.BorderStyle = BorderStyle.FixedSingle;
             }
         }
 
