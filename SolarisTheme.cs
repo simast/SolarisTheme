@@ -130,7 +130,7 @@ namespace SolarisTheme
 
                 // Movement tails
                 if (pen.Color == oldCivilianContactColor || pen.Color == oldPlayerContactColor
-                    || pen.Color == oldHostileContactColor)
+                    || pen.Color == oldHostileContactColor || pen.Color == mainTextColor)
                 {
                     pen.Color = ControlPaint.Dark(pen.Color, 0.5f);
                 }
