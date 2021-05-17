@@ -41,6 +41,7 @@ namespace SolarisTheme
         private static readonly Color oldTextColor = Color.FromArgb(255, 255, 192);
         private static readonly Color oldBackgrounColor = Color.FromArgb(0, 0, 64);
         private static readonly Color oldPlayerContactColor = Color.FromArgb(255, 255, 192);
+        private static readonly Color oldNeutralContactColor = Color.FromArgb(144, 238, 144);
         private static readonly Color oldCivilianContactColor = Color.FromArgb(0, 206, 209);
         private static readonly Color oldHostileContactColor = Color.FromArgb(255, 0, 0);
         private static readonly Color oldCometPathColor = Color.LimeGreen;
@@ -133,7 +134,8 @@ namespace SolarisTheme
 
                 // Movement tails
                 if (pen.Color == oldCivilianContactColor || pen.Color == oldPlayerContactColor
-                    || pen.Color == oldHostileContactColor || pen.Color == mainTextColor)
+                    || pen.Color == oldHostileContactColor || pen.Color == mainTextColor
+                    || pen.Color == oldNeutralContactColor)
                 {
                     pen.Color = ControlPaint.Dark(pen.Color, 0.5f);
                 }
