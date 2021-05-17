@@ -302,7 +302,10 @@ namespace SolarisTheme
 
         private static void ApplyTreeViewChanges(TreeView treeView)
         {
-            treeView.BorderStyle = BorderStyle.None;
+            if (treeView.BorderStyle == BorderStyle.Fixed3D)
+            {
+                treeView.BorderStyle = BorderStyle.FixedSingle;
+            }
         }
 
         private static void ApplyListViewChanges(ListView listView)
