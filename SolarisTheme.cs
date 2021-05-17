@@ -87,9 +87,6 @@ namespace SolarisTheme
         {
             lib = GetDependency<Lib.Lib>("Lib");
 
-            ThemeCreator.ThemeCreator.AddColorChange(oldBackgrounColor, mainBackgroundColor);
-            ThemeCreator.ThemeCreator.AddColorChange(oldTextColor, mainTextColor);
-
             // Buttons
             ThemeCreator.ThemeCreator.AddColorChange(
                 typeof(Button),
@@ -182,6 +179,17 @@ namespace SolarisTheme
             ChangeButtonStyle(AuroraButton.ToolbarUndo, Resources.Icon_Undo, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarSavePositions, Resources.Icon_SavePositions, mainTextColor);
 
+            var colorFromArgbPostfix = new HarmonyMethod(GetType().GetMethod("ColorFromArgbPostfix", AccessTools.all));
+
+            // Patch all Color.FromArgb overloads for color overrides.
+            foreach (var method in typeof(Color).GetMethods(AccessTools.all))
+            {
+                if (method.Name == "FromArgb")
+                {
+                    harmony.Patch(method, postfix: colorFromArgbPostfix);
+                }
+            }
+
             // Hook into Aurora forms constructors for some more advanced overrides
             var formConstructorPostfix = new HarmonyMethod(GetType().GetMethod("FormConstructorPostfix", AccessTools.all));
 
@@ -191,6 +199,18 @@ namespace SolarisTheme
                 {
                     harmony.Patch(ctor, postfix: formConstructorPostfix);
                 }
+            }
+        }
+
+        private static void ColorFromArgbPostfix(ref Color __result)
+        {
+            if (__result == oldTextColor)
+            {
+                __result = mainTextColor;
+            }
+            else if (__result == oldBackgrounColor)
+            {
+                __result = mainBackgroundColor;
             }
         }
 
@@ -321,31 +341,6 @@ namespace SolarisTheme
             if (listView.BorderStyle == BorderStyle.Fixed3D)
             {
                 listView.BorderStyle = BorderStyle.FixedSingle;
-            }
-
-            if (listView.Name == "lstvSB")
-            {
-                listView.OwnerDraw = false;
-
-                // Get rid of the old text color in system list view
-                listView.Invalidated += (Object sender, InvalidateEventArgs e) =>
-                {
-                    foreach (ListViewItem item in ((ListView)sender).Items)
-                    {
-                        if (item.ForeColor == oldTextColor)
-                        {
-                            item.ForeColor = mainTextColor;
-                        }
-
-                        foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
-                        {
-                            if (subItem.ForeColor == oldTextColor)
-                            {
-                                subItem.ForeColor = mainTextColor;
-                            }
-                        }
-                    }
-                };
             }
         }
 
