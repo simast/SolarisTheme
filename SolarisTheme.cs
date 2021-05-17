@@ -46,6 +46,7 @@ namespace SolarisTheme
         private static readonly Color oldCometPathColor = Color.LimeGreen;
         private static readonly Color oldOrbitColor = Color.LimeGreen;
         private static readonly Color oldDisabledTextColor = Color.LightGray;
+        private static readonly Color oldEnabledButtonBackgroundColor = Color.FromArgb(0, 0, 120);
 
         private static string lastActiveTimeIncrement;
         private static string activeSubPulse;
@@ -213,7 +214,7 @@ namespace SolarisTheme
             {
                 __result = mainTextColor;
             }
-            else if (__result == oldBackgrounColor)
+            else if (__result == oldBackgrounColor || __result == oldEnabledButtonBackgroundColor)
             {
                 __result = mainBackgroundColor;
             }
