@@ -21,8 +21,10 @@ namespace SolarisTheme
         private static Lib.Lib lib;
 
         // Fonts
-        private static readonly Font mainFont = new Font("Tahoma", 8.25f, FontStyle.Regular);
-        private static readonly Font buttonFont = new Font("Tahoma", 7, FontStyle.Bold);
+        private static readonly FontFamily fontFamily = new FontFamily("Tahoma");
+        private static readonly Font mainFont = new Font(fontFamily, 8.25f);
+        private static readonly Font singleLineTextBoxFont = new Font(fontFamily, 8);
+        private static readonly Font buttonFont = new Font(fontFamily, 7, FontStyle.Bold);
 
         // Our new colors
         private static readonly Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
@@ -99,6 +101,12 @@ namespace SolarisTheme
 
             ThemeCreator.ThemeCreator.AddFontChange(mainFont);
             ThemeCreator.ThemeCreator.AddFontChange(typeof(Button), buttonFont);
+
+            // Use slightly different text box font size for better alignment and some overflow issues in System view form
+            ThemeCreator.ThemeCreator.AddFontChange((Control control) =>
+            {
+                return control.GetType() == typeof(TextBox) && !((TextBox)control).Multiline;
+            }, singleLineTextBoxFont);
 
             ThemeCreator.ThemeCreator.SetCometTailColor(orbitColor);
             ThemeCreator.ThemeCreator.SetPlanetColor(planetColor);
