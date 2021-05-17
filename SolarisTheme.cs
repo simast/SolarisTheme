@@ -29,6 +29,7 @@ namespace SolarisTheme
         // Our new colors
         private static readonly Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
         private static readonly Color mainTextColor = Color.FromArgb(210, 210, 210);
+        private static readonly Color disabledTextColor = ControlPaint.Dark(mainTextColor, 0.5f);
         private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
         private static readonly Color orbitColor = Color.FromArgb(128, planetColor);
@@ -44,6 +45,7 @@ namespace SolarisTheme
         private static readonly Color oldHostileContactColor = Color.FromArgb(255, 0, 0);
         private static readonly Color oldCometPathColor = Color.LimeGreen;
         private static readonly Color oldOrbitColor = Color.LimeGreen;
+        private static readonly Color oldDisabledTextColor = Color.LightGray;
 
         private static string lastActiveTimeIncrement;
         private static string activeSubPulse;
@@ -179,16 +181,19 @@ namespace SolarisTheme
             ChangeButtonStyle(AuroraButton.ToolbarUndo, Resources.Icon_Undo, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarSavePositions, Resources.Icon_SavePositions, mainTextColor);
 
-            var colorFromArgbPostfix = new HarmonyMethod(GetType().GetMethod("ColorFromArgbPostfix", AccessTools.all));
+            var colorConstructorPostfix = new HarmonyMethod(GetType().GetMethod("ColorConstructorPostfix", AccessTools.all));
 
-            // Patch all Color.FromArgb overloads for color overrides.
+            // Patch all Color.FromArgb overloads for color overrides
             foreach (var method in typeof(Color).GetMethods(AccessTools.all))
             {
                 if (method.Name == "FromArgb")
                 {
-                    harmony.Patch(method, postfix: colorFromArgbPostfix);
+                    harmony.Patch(method, postfix: colorConstructorPostfix);
                 }
             }
+
+            // Also hook into some predefined/named color properties
+            harmony.Patch(typeof(Color).GetMethod("get_LightGray"), postfix: colorConstructorPostfix);
 
             // Hook into Aurora forms constructors for some more advanced overrides
             var formConstructorPostfix = new HarmonyMethod(GetType().GetMethod("FormConstructorPostfix", AccessTools.all));
@@ -202,7 +207,7 @@ namespace SolarisTheme
             }
         }
 
-        private static void ColorFromArgbPostfix(ref Color __result)
+        private static void ColorConstructorPostfix(ref Color __result)
         {
             if (__result == oldTextColor)
             {
@@ -211,6 +216,10 @@ namespace SolarisTheme
             else if (__result == oldBackgrounColor)
             {
                 __result = mainBackgroundColor;
+            }
+            else if (__result == oldDisabledTextColor)
+            {
+                __result = disabledTextColor;
             }
         }
 
