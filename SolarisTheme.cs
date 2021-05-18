@@ -29,7 +29,7 @@ namespace SolarisTheme
         // Our new colors
         private static readonly Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
         private static readonly Color mainTextColor = Color.FromArgb(210, 210, 210);
-        private static readonly Color disabledTextColor = ControlPaint.Dark(mainTextColor, 0.5f);
+        private static readonly Color disabledTextColor = ControlPaint.Dark(mainTextColor, 0.2f);
         private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
         private static readonly Color orbitColor = Color.FromArgb(128, planetColor);
@@ -353,6 +353,11 @@ namespace SolarisTheme
             if (listView.BorderStyle == BorderStyle.Fixed3D)
             {
                 listView.BorderStyle = BorderStyle.FixedSingle;
+            }
+
+            if (listView.View == View.Details && listView.Columns.Count > 1)
+            {
+                listView.FullRowSelect = true;
             }
         }
 
