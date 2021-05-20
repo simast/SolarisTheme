@@ -114,7 +114,8 @@ namespace SolarisTheme
             ThemeCreator.ThemeCreator.AddFontChange(mainFont);
             ThemeCreator.ThemeCreator.AddFontChange(typeof(Button), buttonFont);
 
-            // Use slightly different text box font size for better alignment and some overflow issues in System view form
+            // Use slightly different text box font size for better alignment and to fix some
+            // overflow issues in System view form ("Specify Minerals" feature in SM mode).
             ThemeCreator.ThemeCreator.AddFontChange((Control control) =>
             {
                 return control.GetType() == typeof(TextBox) && !((TextBox)control).Multiline;
@@ -137,6 +138,18 @@ namespace SolarisTheme
             ThemeCreator.ThemeCreator.FillEllipsePrefixAction((graphics, brush) =>
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+                if (brush.GetType() == typeof(SolidBrush))
+                {
+                    var solidBrush = brush as SolidBrush;
+
+                    // This is being overriden by global color contructor hook, but we want to keep
+                    // the old yellow color for player contacts, so restore.
+                    if (solidBrush.Color == mainTextColor)
+                    {
+                        solidBrush.Color = oldPlayerContactColor;
+                    }
+                }
             });
 
             ThemeCreator.ThemeCreator.DrawLinePrefixAction((graphics, pen) =>
@@ -144,11 +157,14 @@ namespace SolarisTheme
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
                 // Movement tails
-                if (pen.Color == oldCivilianContactColor || pen.Color == oldPlayerContactColor
-                    || pen.Color == oldHostileContactColor || pen.Color == mainTextColor
-                    || pen.Color == oldNeutralContactColor)
+                if (pen.Color == oldCivilianContactColor || pen.Color == oldHostileContactColor
+                    || pen.Color == mainTextColor || pen.Color == oldNeutralContactColor)
                 {
-                    pen.Color = ControlPaint.Dark(pen.Color, 0.5f);
+                    // Restore player contact movement tail color to the old yellow one (was overriden
+                    // by global color contructor hook).
+                    var newColor = pen.Color == mainTextColor ? oldPlayerContactColor : pen.Color;
+
+                    pen.Color = ControlPaint.Dark(newColor, 0.5f);
                 }
                 // Comet path (distance ruler also uses the same color but has pen.Width > 1)
                 else if (pen.Color == oldCometPathColor && pen.Width == 1)
