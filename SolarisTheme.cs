@@ -481,7 +481,7 @@ namespace SolarisTheme
 
             button.BackgroundImageChanged -= OnSpaceMasterButtonBackgroundImageChanged;
 
-            // NOTE: This guard is needed as you can have both tactical and galaxy maps
+            // NOTE: This guard is needed as you can have both tactical and galactic maps
             // open at the same time (with duplicated buttons between the two).
             if (button.FindForm() == Form.ActiveForm)
             {
