@@ -364,13 +364,13 @@ namespace SolarisTheme
             }
             else if (IsSpaceMasterButton(button))
             {
-                button.Click += OnSpaceMasterButtonClick;
                 ApplySpaceMasterButtonStyle(button);
+                button.BackgroundImageChanged += OnSpaceMasterButtonBackgroundImageChanged;
             }
             else if (IsAutoTurnsButton(button))
             {
-                button.Click += OnAutoTurnsButtonClick;
                 ApplyAutoTurnsButtonStyle(button);
+                button.BackgroundImageChanged += OnAutoTurnsButtonBackgroundImageChanged;
             }
         }
 
@@ -440,7 +440,7 @@ namespace SolarisTheme
 
         private static void ApplyFormChanges(Form form)
         {
-            form.ShowIcon = false;
+            form.ShowIcon = false; // Aurora uses default Windows Forms icons
         }
 
         private static void OnTimeIncrementButtonClick(Object sender, EventArgs e)
@@ -475,11 +475,14 @@ namespace SolarisTheme
                 : mainBackgroundColor;
         }
 
-        private static void OnSpaceMasterButtonClick(Object sender, EventArgs e)
+        private static void OnSpaceMasterButtonBackgroundImageChanged(Object sender, EventArgs e)
         {
             var button = sender as Button;
+
+            button.BackgroundImageChanged -= OnSpaceMasterButtonBackgroundImageChanged;
             isSpaceMasterEnabled = !isSpaceMasterEnabled;
             ApplySpaceMasterButtonStyle(button);
+            button.BackgroundImageChanged += OnSpaceMasterButtonBackgroundImageChanged;
         }
 
         private static void ApplySpaceMasterButtonStyle(Button button)
@@ -490,11 +493,14 @@ namespace SolarisTheme
             button.BackgroundImage = ColorizeImage(image, color);
         }
 
-        private static void OnAutoTurnsButtonClick(Object sender, EventArgs e)
+        private static void OnAutoTurnsButtonBackgroundImageChanged(Object sender, EventArgs e)
         {
             var button = sender as Button;
+
+            button.BackgroundImageChanged -= OnAutoTurnsButtonBackgroundImageChanged;
             isAutoTurnsEnabled = !isAutoTurnsEnabled;
             ApplyAutoTurnsButtonStyle(button);
+            button.BackgroundImageChanged += OnAutoTurnsButtonBackgroundImageChanged;
         }
 
         private static void ApplyAutoTurnsButtonStyle(Button button)
