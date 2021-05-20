@@ -29,13 +29,24 @@ namespace SolarisTheme
         // Our new colors
         private static readonly Color mainBackgroundColor = Color.FromArgb(12, 12, 12);
         private static readonly Color mainTextColor = Color.FromArgb(210, 210, 210);
-        private static readonly Color disabledTextColor = ControlPaint.Dark(mainTextColor, 0.2f);
+        private static readonly Color disabledTextColor = ControlPaint.Dark(mainTextColor, 0.15f);
         private static readonly Color buttonBackgroundColor = Color.FromArgb(23, 26, 39);
         private static readonly Color planetColor = Color.FromArgb(128, 128, 128);
         private static readonly Color orbitColor = Color.FromArgb(128, planetColor);
-        private static readonly Color economicsButtonBackgroundColor = Color.FromArgb(22, 38, 39);
         private static readonly Color enabledSpaceMasterButtonColor = Color.FromArgb(248, 231, 28);
         private static readonly Color enabledAutoTurnsButtonColor = Color.FromArgb(126, 211, 33);
+
+        // Toolbar button background colors
+        private static readonly Color economicsButtonBackgroundColor = Color.FromArgb(26, 45, 46);
+        private static readonly Color designButtonBackgroundColor = Color.FromArgb(41, 44, 46);
+        private static readonly Color fleetButtonBackgroundColor = Color.FromArgb(45, 26, 26);
+        private static readonly Color groundForcesButtonBackgroundColor = Color.FromArgb(42, 45, 28);
+        private static readonly Color intelligenceButtonBackgroundColor = Color.FromArgb(47, 38, 47);
+        private static readonly Color explorationButtonBackgroundColor = Color.FromArgb(24, 27, 78);
+        private static readonly Color personnelButtonBackgroundColor = Color.FromArgb(18, 41, 58);
+        private static readonly Color surveyButtonBackgroundColor = Color.FromArgb(40, 31, 24);
+        private static readonly Color technologyButtonBackgroundColor = Color.FromArgb(42, 22, 45);
+        private static readonly Color sectorButtonBackgroundColor = Color.FromArgb(20, 45, 31);
 
         // Old colors
         private static readonly Color oldTextColor = Color.FromArgb(255, 255, 192);
@@ -158,23 +169,23 @@ namespace SolarisTheme
             ChangeButtonStyle(AuroraButton.ToolbarMining, Resources.Icon_Mining, mainTextColor, economicsButtonBackgroundColor);
             ChangeButtonStyle(AuroraButton.ToolbarResearch, Resources.Icon_Research, mainTextColor, economicsButtonBackgroundColor);
             ChangeButtonStyle(AuroraButton.ToolbarWealth, Resources.Icon_Wealth, mainTextColor, economicsButtonBackgroundColor);
-            ChangeButtonStyle(AuroraButton.ToolbarClass, Resources.Icon_Class, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarProject, Resources.Icon_Project, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarFleet, Resources.Icon_Fleet, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarMissileDesign, Resources.Icon_MissileDesign, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarTurrent, Resources.Icon_Turrent, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarGroundForces, Resources.Icon_GroundForces, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarCommanders, Resources.Icon_Commanders, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarMedals, Resources.Icon_Medals, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarRace, Resources.Icon_Race, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarSystem, Resources.Icon_System, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarGalactic, Resources.Icon_Galactic, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarHabitable, Resources.Icon_Galactic, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarComparison, Resources.Icon_Comparison, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarIntelligence, Resources.Icon_Intelligence, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarTechnology, Resources.Icon_Technology, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarSurvey, Resources.Icon_Survey, mainTextColor);
-            ChangeButtonStyle(AuroraButton.ToolbarSector, Resources.Icon_Sector, mainTextColor);
+            ChangeButtonStyle(AuroraButton.ToolbarClass, Resources.Icon_Class, mainTextColor, designButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarProject, Resources.Icon_Project, mainTextColor, designButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarFleet, Resources.Icon_Fleet, mainTextColor, fleetButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarMissileDesign, Resources.Icon_MissileDesign, mainTextColor, designButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarTurrent, Resources.Icon_Turrent, mainTextColor, designButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarGroundForces, Resources.Icon_GroundForces, mainTextColor, groundForcesButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarCommanders, Resources.Icon_Commanders, mainTextColor, personnelButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarMedals, Resources.Icon_Medals, mainTextColor, personnelButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarRace, Resources.Icon_Race, mainTextColor, intelligenceButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarSystem, Resources.Icon_System, mainTextColor, explorationButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarGalactic, Resources.Icon_Galactic, mainTextColor, explorationButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarHabitable, Resources.Icon_Galactic, mainTextColor, explorationButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarComparison, Resources.Icon_Comparison, mainTextColor, intelligenceButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarIntelligence, Resources.Icon_Intelligence, mainTextColor, intelligenceButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarTechnology, Resources.Icon_Technology, mainTextColor, technologyButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarSurvey, Resources.Icon_Survey, mainTextColor, surveyButtonBackgroundColor);
+            ChangeButtonStyle(AuroraButton.ToolbarSector, Resources.Icon_Sector, mainTextColor, sectorButtonBackgroundColor);
             ChangeButtonStyle(AuroraButton.ToolbarEvents, Resources.Icon_Events, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarRefreshTactical, Resources.Icon_Refresh, mainTextColor);
             ChangeButtonStyle(AuroraButton.ToolbarRefreshGalactic, Resources.Icon_Refresh, mainTextColor);
