@@ -480,7 +480,14 @@ namespace SolarisTheme
             var button = sender as Button;
 
             button.BackgroundImageChanged -= OnSpaceMasterButtonBackgroundImageChanged;
-            isSpaceMasterEnabled = !isSpaceMasterEnabled;
+
+            // NOTE: This guard is needed as you can have both tactical and galaxy maps
+            // open at the same time (with duplicated buttons between the two).
+            if (button.FindForm() == Form.ActiveForm)
+            {
+                isSpaceMasterEnabled = !isSpaceMasterEnabled;
+            }
+
             ApplySpaceMasterButtonStyle(button);
             button.BackgroundImageChanged += OnSpaceMasterButtonBackgroundImageChanged;
         }
@@ -491,6 +498,17 @@ namespace SolarisTheme
             Color color = isSpaceMasterEnabled ? enabledSpaceMasterButtonColor : mainTextColor;
 
             button.BackgroundImage = ColorizeImage(image, color);
+
+            foreach (var form in lib.GetOpenForms())
+            {
+                var buttonCopy = form.Controls.Find(button.Name, true).FirstOrDefault();
+                if (buttonCopy != null && buttonCopy != button)
+                {
+                    buttonCopy.BackgroundImageChanged -= OnSpaceMasterButtonBackgroundImageChanged;
+                    buttonCopy.BackgroundImage = button.BackgroundImage;
+                    buttonCopy.BackgroundImageChanged += OnSpaceMasterButtonBackgroundImageChanged;
+                }
+            }
         }
 
         private static void OnAutoTurnsButtonBackgroundImageChanged(Object sender, EventArgs e)
@@ -498,7 +516,12 @@ namespace SolarisTheme
             var button = sender as Button;
 
             button.BackgroundImageChanged -= OnAutoTurnsButtonBackgroundImageChanged;
-            isAutoTurnsEnabled = !isAutoTurnsEnabled;
+
+            if (button.FindForm() == Form.ActiveForm)
+            {
+                isAutoTurnsEnabled = !isAutoTurnsEnabled;
+            }
+
             ApplyAutoTurnsButtonStyle(button);
             button.BackgroundImageChanged += OnAutoTurnsButtonBackgroundImageChanged;
         }
@@ -509,6 +532,17 @@ namespace SolarisTheme
             Color color = isAutoTurnsEnabled ? enabledAutoTurnsButtonColor : mainTextColor;
 
             button.BackgroundImage = ColorizeImage(image, color);
+
+            foreach (var form in lib.GetOpenForms())
+            {
+                var buttonCopy = form.Controls.Find(button.Name, true).FirstOrDefault();
+                if (buttonCopy != null && buttonCopy != button)
+                {
+                    buttonCopy.BackgroundImageChanged -= OnAutoTurnsButtonBackgroundImageChanged;
+                    buttonCopy.BackgroundImage = button.BackgroundImage;
+                    buttonCopy.BackgroundImageChanged += OnAutoTurnsButtonBackgroundImageChanged;
+                }
+            }
         }
 
         private static void ChangeButtonStyle(AuroraButton button, Bitmap image, Color textColor, Color? backgroundColor = null)
